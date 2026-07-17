@@ -58,14 +58,13 @@ def test_project_local_state_db_remains_writable(fake_homes, tmp_path):
     assert is_write_denied(str(target)) is False
 
 
-def test_write_file_tool_preserves_existing_session_snapshot(fake_homes, monkeypatch):
+def test_write_file_tool_preserves_existing_session_snapshot(fake_homes):
     import tools.file_tools as ft
 
     _root, profile = fake_homes
     target = profile / "sessions" / "session_abc.json"
     target.parent.mkdir(parents=True)
     target.write_text("original transcript", encoding="utf-8")
-    monkeypatch.setattr(ft, "_get_live_tracking_cwd", lambda task_id="default": None)
 
     result = json.loads(ft.write_file_tool(str(target), "tampered"))
 
